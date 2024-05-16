@@ -2,6 +2,7 @@ import { openDatabaseAsync, openDatabaseSync } from 'expo-sqlite';
 
 export function DBCreateTable() {
   const db = openDatabaseSync('qwikplan.db');
+  // uncomment drop if table changes 
   const query = `
   -- DROP TABLE IF EXISTS task;
   
@@ -11,6 +12,7 @@ export function DBCreateTable() {
     event TEXT,
     details TEXT,
     datetime TEXT NOT NULL,
+    status TEXT NOT NULL ,
     created_at TEXT,
     updated_at TEXT
   );
@@ -26,8 +28,8 @@ export function DBDebugInit() {
 
   if (task.length) return;
   db.execSync(`
-  INSERT INTO task (id, title, event, details, datetime, created_at, updated_at)
-  VALUES ('1','Test Task', 'daily', 'test task details', '2024-05-17T12:49:06.429Z', '2024-05-17T12:49:06.429Z', '2024-05-17T12:49:06.429Z');
+  INSERT INTO task (id, title, event, details, datetime, status, created_at, updated_at)
+  VALUES ('1','Test Task', 'daily', 'test task details', 'TODO', '2024-05-17T12:49:06.429Z', '2024-05-17T12:49:06.429Z', '2024-05-17T12:49:06.429Z');
   `);
   db.closeSync();
 }

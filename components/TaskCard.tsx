@@ -5,11 +5,19 @@ import { View, Text, StyleSheet, Pressable, } from "react-native";
 export const TaskCard = (props: {
   data: TaskType,
   onEditPressed: (data: TaskType) => void;
+  onDeletePressed: (data: TaskType) => void;
+  onCompletePressed: (data: TaskType) => void;
 }) => {
   const { data } = props;
 
   function onCardEditPress() {
     props?.onEditPressed(data)
+  }
+  function onCardDeletePressed() {
+    props?.onDeletePressed(data)
+  }
+  function onCardCompletePressed() {
+    props?.onCompletePressed(data)
   }
 
   const style = StyleSheet.create({
@@ -39,6 +47,16 @@ export const TaskCard = (props: {
         <Text>{data.details}</Text>
       </View>
       <View>
+      <Pressable
+          style={({ pressed }) => [
+            style['edit-btn'],
+            { backgroundColor: pressed ? 'green' : 'yellow' },
+          ]}
+          onPress={onCardDeletePressed}
+        >
+          <Ionicons name="trash" />
+        </Pressable>
+
         <Pressable
           style={({ pressed }) => [
             style['edit-btn'],
@@ -46,7 +64,17 @@ export const TaskCard = (props: {
           ]}
           onPress={onCardEditPress}
         >
-          <Ionicons name="ellipsis-horizontal" />
+          <Ionicons name="create" />
+        </Pressable>
+
+        <Pressable
+          style={({ pressed }) => [
+            style['edit-btn'],
+            { backgroundColor: pressed ? 'green' : 'yellow' },
+          ]}
+          onPress={onCardCompletePressed}
+        >
+          <Ionicons name="checkmark-circle" />
         </Pressable>
       </View>
     </View>

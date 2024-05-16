@@ -3,7 +3,7 @@ import { TaskModal } from "@/components/TaskModal";
 import { TaskType } from "@/interfaces/task";
 import { useSQLiteContext } from "expo-sqlite";
 import { useEffect, useState } from "react";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 const style = StyleSheet.create({
   page: {
@@ -36,6 +36,22 @@ const Home = () => {
     })
   }
 
+  function onDeletePressed(data: TaskType) {
+    const query = db.prepareSync(`
+    DELETE FROM task
+    WHERE id = $id;
+    `);
+    try {
+      let result = query.executeSync({ $id: data.id })
+      console.log(`RESULT ${result.changes}`)
+    } catch (error) {
+      Alert.alert('Unable to delete task');
+      console.error(error);
+    } finally {
+      getData();
+    }
+  }
+
   function onEditPressed(data: TaskType) {
     setModalValue({
       visible: true,
@@ -48,10 +64,31 @@ const Home = () => {
     })
   }
 
+  function onCompletePressed(data: TaskType) {
+    let query = db.prepareSync(`
+    UPDATE task
+      SET status = 'COMPLETED'
+    WHERE id = $id
+    `);
+    try {
+      let result = query.executeSync({ $id: data.id })
+      console.log(`RESULT ${result.changes}`)
+    } catch (error) {
+      Alert.alert('Unable to complete task');
+      console.error(error);
+    } finally {
+      getData();
+    }
+  }
+
 
   async function getData() {
-    const result = await db.getAllAsync<TaskType>(`SELECT * FROM task`)
-    console.log(result)
+    const query = `
+    SELECT * FROM task 
+    WHERE status != 'COMPLETED' 
+    ORDER BY datetime(updated_at) DESC;
+    `
+    const result = await db.getAllAsync<TaskType>(query)
     setItems(result);
   }
 
@@ -74,7 +111,15 @@ const Home = () => {
       </Pressable>
 
       <ScrollView>
-        {items?.map((v) => <TaskCard onEditPressed={(data) => onEditPressed(data)} key={v.id} data={v} />)}
+        {items?.map((v) => (
+          <TaskCard
+            key={v.id}
+            data={v}
+            onDeletePressed={onDeletePressed}
+            onEditPressed={onEditPressed}
+            onCompletePressed={onCompletePressed}
+          />
+        ))}
       </ScrollView>
 
     </View>

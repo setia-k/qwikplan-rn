@@ -30,6 +30,14 @@ export const TaskModal = (props: {
   // Input Ref to trigger validation
   const titleRef = useRef();
 
+  // reset form
+  function resetForm() {
+    setTitle('');
+    setEvent('');
+    setDetails('');
+    setPickerDate(new Date());
+  }
+
   // Now + 2 minute
   function getDateTimeLimit(): Date {
     const currentDate = new Date();
@@ -46,6 +54,7 @@ export const TaskModal = (props: {
         datetime: pickerDate.toISOString(),
         created_at: data.created_at,
         updated_at: now.toISOString(),
+        status: 'TODO',
       }
       updateData(update)
     } else {
@@ -56,6 +65,7 @@ export const TaskModal = (props: {
         datetime: pickerDate.toISOString(),
         created_at: now.toISOString(),
         updated_at: now.toISOString(),
+        status: 'TODO',
       }
       insertData(newTask)
     }
@@ -63,8 +73,8 @@ export const TaskModal = (props: {
 
   async function insertData(data: TaskType) {
     const query = await db.prepareAsync(`
-      INSERT INTO task (id, title, event, details, datetime, created_at, updated_at)
-      VALUES ($id, $title, $event, $details, $datetime, $created_at, $updated_at) 
+      INSERT INTO task (id, title, event, details, datetime, status, created_at, updated_at)
+      VALUES ($id, $title, $event, $details, $datetime, $status, $created_at, $updated_at) 
     `)
     try {
       let result = await query.executeAsync({
@@ -73,6 +83,7 @@ export const TaskModal = (props: {
         $event: data.event,
         $details: data.details,
         $datetime: data.datetime,
+        $status: data.status,
         $created_at: data.created_at,
         $updated_at: data.updated_at
       });
@@ -83,6 +94,7 @@ export const TaskModal = (props: {
     } finally {
       await query.finalizeAsync();
       props?.onFinishCallback()
+      resetForm();
     }
   }
 
@@ -112,6 +124,7 @@ export const TaskModal = (props: {
     } finally {
       query.finalizeAsync();
       props?.onFinishCallback()
+      resetForm();
     }
   }
 
