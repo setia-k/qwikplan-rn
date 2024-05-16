@@ -29,6 +29,10 @@ const Home = () => {
       visible: true,
       data: null,
       isEdit: false,
+      onFinishCallback: () => {
+        hideModal();
+        getData();
+      },
     })
   }
 
@@ -37,6 +41,10 @@ const Home = () => {
       visible: true,
       data,
       isEdit: true,
+      onFinishCallback: () => {
+        hideModal();
+        getData();
+      },
     })
   }
 

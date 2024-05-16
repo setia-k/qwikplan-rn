@@ -1,23 +1,31 @@
-import { View, Modal, Text, Pressable, StyleSheet, TextInput } from "react-native";
-import { FieldInput } from "./FieldInput";
-import { useEffect, useRef, useState } from "react";
-import DatePicker from "react-native-date-picker";
 import { TaskType } from "@/interfaces/task";
 import { Ionicons } from "@expo/vector-icons";
+import { useSQLiteContext } from "expo-sqlite";
+import { useEffect, useRef, useState } from "react";
+import { Alert, Modal, Pressable, StyleSheet, Text, View } from "react-native";
+import DatePicker from "react-native-date-picker";
+import { FieldInput } from "./FieldInput";
+
+// DO NOT CHANGE THE ORDER =======================
+import 'react-native-get-random-values';
+import { v4 as uuidv4 } from 'uuid';
+// =================
 
 export const TaskModal = (props: {
   visible: boolean,
-  onModalClose: () => void;
+  onModalClose: () => void,
+  onFinishCallback: () => void,
   data?: TaskType,
   isEdit?: boolean,
 }) => {
   const { visible, onModalClose, data, isEdit } = props;
+  const db = useSQLiteContext();
 
   // form
   const [title, setTitle] = useState<string>('');
   const [event, setEvent] = useState<string>('');
   const [details, setDetails] = useState<string>('');
-  const [date, setDate] = useState(new Date());
+  const [pickerDate, setPickerDate] = useState(new Date());
 
   // Input Ref to trigger validation
   const titleRef = useRef();
@@ -30,10 +38,81 @@ export const TaskModal = (props: {
   }
 
   function submit() {
-    console.log('title', title)
-    console.log('event', event)
-    console.log('details', details)
-    console.log(date);
+    const now = new Date();
+    if (isEdit && data) {
+      let update: TaskType = {
+        id: data.id,
+        title, event, details,
+        datetime: pickerDate.toISOString(),
+        created_at: data.created_at,
+        updated_at: now.toISOString(),
+      }
+      updateData(update)
+    } else {
+      const newId = uuidv4();
+      const newTask: TaskType = {
+        id: newId,
+        title, event, details,
+        datetime: pickerDate.toISOString(),
+        created_at: now.toISOString(),
+        updated_at: now.toISOString(),
+      }
+      insertData(newTask)
+    }
+  }
+
+  async function insertData(data: TaskType) {
+    const query = await db.prepareAsync(`
+      INSERT INTO task (id, title, event, details, datetime, created_at, updated_at)
+      VALUES ($id, $title, $event, $details, $datetime, $created_at, $updated_at) 
+    `)
+    try {
+      let result = await query.executeAsync({
+        $id: data.id,
+        $title: data.title,
+        $event: data.event,
+        $details: data.details,
+        $datetime: data.datetime,
+        $created_at: data.created_at,
+        $updated_at: data.updated_at
+      });
+      console.log(`RESULT ${result.changes}`)
+    } catch (error) {
+      console.error(error);
+      Alert.alert('Unable to add new task');
+    } finally {
+      await query.finalizeAsync();
+      props?.onFinishCallback()
+    }
+  }
+
+  async function updateData(update: TaskType) {
+    const query = await db.prepareAsync(`
+    UPDATE task
+    SET title = $title, 
+        event = $event, 
+        details = $details, 
+        datetime = $datetime,
+        updated_at = $updated_at
+    WHERE id = $id
+    `)
+    try {
+      let result = await query.executeAsync({
+        $title: update.title,
+        $event: update.event,
+        $details: update.details,
+        $datetime: update.datetime,
+        $updated_at: update.updated_at,
+        $id: update.id,
+      })
+      console.log(`RESULT ${result.changes}`)
+    } catch (error) {
+      console.error(error);
+      Alert.alert('Unable to update task');
+    } finally {
+      query.finalizeAsync();
+      props?.onFinishCallback()
+    }
   }
 
 
@@ -61,7 +140,7 @@ export const TaskModal = (props: {
       setEvent(data.event);
       setDetails(data.details);
       const dataDate = new Date(data.datetime);
-      setDate(dataDate);
+      setPickerDate(dataDate);
     }
   }, [data, isEdit])
 
@@ -104,8 +183,8 @@ export const TaskModal = (props: {
 
           <View style={{ flexDirection: 'row' }}>
             <DatePicker
-              date={date}
-              onDateChange={setDate}
+              date={pickerDate}
+              onDateChange={setPickerDate}
               is24hourSource="locale"
               locale="id"
               minimumDate={getDateTimeLimit()}

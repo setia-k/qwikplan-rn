@@ -3,7 +3,7 @@ import { openDatabaseAsync, openDatabaseSync } from 'expo-sqlite';
 export function DBCreateTable() {
   const db = openDatabaseSync('qwikplan.db');
   const query = `
-  DROP TABLE IF EXISTS task;
+  -- DROP TABLE IF EXISTS task;
   
   CREATE TABLE IF NOT EXISTS task (
     id TEXT PRIMARY KEY,

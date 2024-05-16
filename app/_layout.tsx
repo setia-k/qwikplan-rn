@@ -22,7 +22,7 @@ export default function RootLayout() {
     const initDB = async () => {
       try {
         DBCreateTable();
-        DBDebugInit();
+        // DBDebugInit();
       } catch (e) {
         console.warn(e);
       } finally {
