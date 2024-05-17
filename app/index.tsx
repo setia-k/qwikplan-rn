@@ -20,7 +20,11 @@ const Home = () => {
     isEdit: false,
   })
   function hideModal() {
-    setModalValue((prev: any) => ({ ...prev, visible: false }))
+    setModalValue({
+      data: null,
+      isEdit: false,
+      visible: false
+    })
   }
   const [items, setItems] = useState<TaskType[]>([])
 

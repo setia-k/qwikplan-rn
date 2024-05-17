@@ -4,7 +4,7 @@ import { useSQLiteContext } from "expo-sqlite";
 import { useEffect, useRef, useState } from "react";
 import { Alert, Modal, Pressable, StyleSheet, Text, View } from "react-native";
 import DatePicker from "react-native-date-picker";
-import { FieldInput } from "./FieldInput";
+import { FieldInput, FieldInputRefType } from "./FieldInput";
 
 // DO NOT CHANGE THE ORDER =======================
 import 'react-native-get-random-values';
@@ -22,19 +22,18 @@ export const TaskModal = (props: {
   const db = useSQLiteContext();
 
   // form
-  const [title, setTitle] = useState<string>('');
-  const [event, setEvent] = useState<string>('');
-  const [details, setDetails] = useState<string>('');
   const [pickerDate, setPickerDate] = useState(new Date());
 
   // Input Ref to trigger validation
-  const titleRef = useRef();
+  const titleRef = useRef<FieldInputRefType>();
+  const eventRef = useRef<FieldInputRefType>();
+  const detailRef = useRef<FieldInputRefType>();
 
   // reset form
   function resetForm() {
-    setTitle('');
-    setEvent('');
-    setDetails('');
+    titleRef.current?.setFieldValue('');
+    eventRef.current?.setFieldValue('');
+    detailRef.current?.setFieldValue('');
     setPickerDate(new Date());
   }
 
@@ -47,6 +46,10 @@ export const TaskModal = (props: {
 
   function submit() {
     const now = new Date();
+    const title = titleRef?.current?.getFieldValue() || '';
+    const event = eventRef?.current?.getFieldValue() || '';
+    const details = detailRef?.current?.getFieldValue() || '';
+
     if (isEdit && data) {
       let update: TaskType = {
         id: data.id,
@@ -149,9 +152,9 @@ export const TaskModal = (props: {
 
   useEffect(() => {
     if (data && isEdit) {
-      setTitle(data.title);
-      setEvent(data.event);
-      setDetails(data.details);
+      titleRef.current?.setFieldValue(data.title);
+      eventRef.current?.setFieldValue(data.event);
+      detailRef.current?.setFieldValue(data.details);
       const dataDate = new Date(data.datetime);
       setPickerDate(dataDate);
     }
@@ -173,22 +176,18 @@ export const TaskModal = (props: {
 
           <View style={{ flexDirection: 'row' }}>
             <FieldInput
-              value={title}
-              setValue={setTitle}
               ref={titleRef}
               label="Title"
               required
             />
             <FieldInput
-              value={event}
-              setValue={setEvent}
+              ref={eventRef}
               label="Event"
             />
           </View>
           <View style={{ flexDirection: 'row' }}>
             <FieldInput
-              value={details}
-              setValue={setDetails}
+              ref={detailRef}
               label="Details"
               width={260}
             />
