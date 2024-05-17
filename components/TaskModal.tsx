@@ -9,6 +9,7 @@ import { FieldInput, FieldInputRefType } from "./FieldInput";
 // DO NOT CHANGE THE ORDER =======================
 import 'react-native-get-random-values';
 import { v4 as uuidv4 } from 'uuid';
+import { rescheduleNotification, scheduleNotifications } from "@/service/notification";
 // =================
 
 export const TaskModal = (props: {
@@ -91,6 +92,9 @@ export const TaskModal = (props: {
         $updated_at: data.updated_at
       });
       console.log(`RESULT ${result.changes}`)
+      if (result.changes) {
+        scheduleNotifications(data)
+      }
     } catch (error) {
       console.error(error);
       Alert.alert('Unable to add new task');
@@ -121,6 +125,9 @@ export const TaskModal = (props: {
         $id: update.id,
       })
       console.log(`RESULT ${result.changes}`)
+      if (result.changes){
+        rescheduleNotification(update)
+      }
     } catch (error) {
       console.error(error);
       Alert.alert('Unable to update task');

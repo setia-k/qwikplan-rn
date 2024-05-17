@@ -1,6 +1,7 @@
 import { TaskCard } from "@/components/TaskCard";
 import { TaskModal } from "@/components/TaskModal";
 import { TaskType } from "@/interfaces/task";
+import { deleteNotifications } from "@/service/notification";
 import { useSQLiteContext } from "expo-sqlite";
 import { useEffect, useState } from "react";
 import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
@@ -48,6 +49,9 @@ const Home = () => {
     try {
       let result = query.executeSync({ $id: data.id })
       console.log(`RESULT ${result.changes}`)
+      if (result.changes) {
+        deleteNotifications(data.id)
+      }
     } catch (error) {
       Alert.alert('Unable to delete task');
       console.error(error);
@@ -77,6 +81,9 @@ const Home = () => {
     try {
       let result = query.executeSync({ $id: data.id })
       console.log(`RESULT ${result.changes}`)
+      if (result.changes) {
+        deleteNotifications(data.id)
+      }
     } catch (error) {
       Alert.alert('Unable to complete task');
       console.error(error);
@@ -84,7 +91,6 @@ const Home = () => {
       getData();
     }
   }
-
 
   async function getData() {
     const query = `

@@ -3,7 +3,7 @@ import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { SQLiteProvider, openDatabaseAsync } from 'expo-sqlite';
-import { Suspense, useEffect, useState } from 'react';
+import { Suspense, useEffect, useRef, useState } from 'react';
 import 'react-native-reanimated';
 
 import { Fallback } from '@/components/Fallback';
@@ -11,7 +11,17 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { DBCreateTable, DBDebugInit } from '@/service/db';
 
+import * as Notifications from 'expo-notifications';
+import { checkNotificationAllowed } from '@/service/notification';
 SplashScreen.preventAutoHideAsync();
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: false,
+  }),
+});
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
@@ -39,10 +49,13 @@ export default function RootLayout() {
     }
   }, [fontLoaded, dbLoaded]);
 
+  useEffect(() => {
+    checkNotificationAllowed()
+  }, [])
+
   if (!fontLoaded && !dbLoaded) {
     return null;
   }
-
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
