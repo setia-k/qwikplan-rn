@@ -1,9 +1,9 @@
 import { TaskType } from "@/interfaces/task";
 import { Ionicons } from "@expo/vector-icons";
-import { View, StyleSheet, Pressable, } from "react-native";
-import { Card, Title, Paragraph, Button, Text, Divider, Menu } from 'react-native-paper';
-import { red } from "react-native-reanimated/lib/typescript/reanimated2/Colors";
 import * as React from 'react';
+import { StyleSheet, View } from "react-native";
+import { Button, Menu, Text } from 'react-native-paper';
+
 export const TaskCard = (props: {
   data: TaskType,
   onEditPressed: (data: TaskType) => void;
@@ -11,18 +11,19 @@ export const TaskCard = (props: {
   onCompletePressed: (data: TaskType) => void;
 }) => {
   const { data } = props;
+  const dateText = new Date(data.datetime)
 
   function onCardEditPress() {
-    setVisible( (prev: any) => ({...prev, 'menu2': false}));
+    setVisible((prev: any) => ({ ...prev, 'menu2': false }));
     props?.onEditPressed(data)
-    
+
   }
   function onCardDeletePressed() {
-    setVisible( (prev: any) => ({...prev, 'menu2': false}));
+    setVisible((prev: any) => ({ ...prev, 'menu2': false }));
     props?.onDeletePressed(data)
   }
   function onCardCompletePressed() {
-    setVisible( (prev: any) => ({...prev, 'menu2': false}));
+    setVisible((prev: any) => ({ ...prev, 'menu2': false }));
     props?.onCompletePressed(data)
   }
 
@@ -109,47 +110,57 @@ export const TaskCard = (props: {
   const [visible, setVisible] = React.useState<any>({});
   const _toggleMenu = (name: string) => () =>
     setVisible({ ...visible, [name]: !visible[name] });
-
   const _getVisible = (name: string) => !!visible[name];
+
   return (
-    <View style={style.container}>
-      <Card style={style.card}>
-        <View style={style.container}>
-          <Card.Content style={style.date}>
-            <Text style={style.day}>{new Date(data.datetime).toLocaleDateString('en-US', { weekday: 'long' })}</Text>
-            <Text style={style.number}>{new Date(data.datetime).getDate().toString().padStart(2, '0')}</Text>
-            <Text style={style.month}>{new Date(data.datetime).toLocaleDateString('en-US', { month: 'long' })}</Text>
-          </Card.Content>
-          <Card.Content style={style.event}>
-            <Text style={style.title}>{data.title}</Text>
-            <Text style={style.paragraph}>
-              {data.event}
-            </Text>
-            <Text style={style.time}>{new Date(data.datetime).getHours() + ':' + new Date(data.datetime).getMinutes()}</Text>
-          </Card.Content>
-          <View style={{  justifyContent: 'flex-end' }}>
-            <Card.Actions >
-              <Menu
-                visible={_getVisible('menu2')}
-                onDismiss={_toggleMenu('menu2')}
-                anchor={
-                  <Button mode="outlined" onPress={_toggleMenu('menu2')}>
-                    <Ionicons name="ellipsis-horizontal" />
-                  </Button>
-                }
-              >
-                <Menu.Item leadingIcon="pencil" onPress={onCardEditPress} title="Update" />
-                <Menu.Item leadingIcon="delete" onPress={onCardDeletePressed} title="Delete" />
-                <Menu.Item leadingIcon="check" onPress={onCardCompletePressed} title="Complete" />
-              </Menu>
-              <Button>Upcoming</Button>
-            </Card.Actions>
-          </View>
+    <View style={{
+      backgroundColor: '#222',
+      borderRadius: 15,
+      padding: 16,
+      marginVertical: 8,
+    }}>
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8 }}>
+        <View>
+          <Text style={style.day}>{dateText.toLocaleDateString('en-US', { weekday: 'long' })}</Text>
+          <Text style={style.number}>{dateText.getDate().toString().padStart(2, '0')}</Text>
+          <Text style={style.month}>{dateText.toLocaleDateString('en-US', { month: 'long' })}</Text>
         </View>
-        {/* <Divider style={{ width: 1, height: '100%' }} /> */}
 
-      </Card>
+        <View>
+          <Text style={style.title}>{data.title}</Text>
+          <Text style={style.paragraph}>{data.event}</Text>
+          <Text style={style.time}>{dateText.getHours() + ':' + dateText.getMinutes()}</Text>
+        </View>
+      </View>
+
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8 }}>
+        <Text style={{ color: 'white' }}>
+          {data?.details};
+        </Text>
+      </View>
+
+
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+        <Menu
+          visible={_getVisible('menu2')}
+          onDismiss={_toggleMenu('menu2')}
+          anchor={(
+            <Button mode="outlined" onPress={_toggleMenu('menu2')}>
+              <Ionicons name="ellipsis-horizontal" />
+            </Button>
+          )}
+        >
+          <Menu.Item leadingIcon="pencil" onPress={onCardEditPress} title="Update" />
+          <Menu.Item leadingIcon="delete" onPress={onCardDeletePressed} title="Delete" />
+          <Menu.Item leadingIcon="check" onPress={onCardCompletePressed} title="Complete" />
+        </Menu>
+        <Button style={{ backgroundColor: '#6750a4', paddingHorizontal: 16 }}>
+          <Text style={{ color: 'white' }}>
+            Upcoming
+          </Text>
+        </Button>
+      </View>
+
     </View>
-
   );
 }

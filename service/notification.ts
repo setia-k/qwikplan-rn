@@ -31,7 +31,7 @@ export async function scheduleNotifications(task: TaskType) {
   const identifier = await Notifications.scheduleNotificationAsync({
     content: {
       title: task.title,
-      body: task.details ?? "You got a reminder from qwikplan :)",
+      body: task.details ?? "You got a reminder from Remember Me :)",
     },
     trigger: time,
     identifier: task.id,

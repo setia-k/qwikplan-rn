@@ -4,18 +4,14 @@ import { TaskType } from "@/interfaces/task";
 import { deleteNotifications } from "@/service/notification";
 import { useSQLiteContext } from "expo-sqlite";
 import { useEffect, useState } from "react";
-import { Alert, Pressable, ScrollView, StyleSheet, Text, View, TouchableOpacity , Image} from "react-native";
+import { Alert, Pressable, ScrollView, StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
 import { Button, List } from 'react-native-paper';
 
 const style = StyleSheet.create({
   page: {
     paddingHorizontal: 16,
     paddingTop: 8,
-    flex:1,
-  },
-  buttonAddTask: {
-    flex: 1, 
-    justifyContent: 'space-between', // Ensures button stays at bottom
+    flex: 1,
   },
   button: {
     margin: 4,
@@ -26,29 +22,27 @@ const style = StyleSheet.create({
     alignSelf: 'flex-end',
     width: '90%', // Make it 90% of the screen width
   },
-  subTitle:{
+  subTitle: {
     fontSize: 18,
     color: '#6253A2',
-    margin:5
+    margin: 5
   },
-  title:{
+  title: {
     fontSize: 24,
     fontWeight: 'bold',
     color: '#6253A2',
     margin: 4
   },
   container: {
-    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
   image: {
-    width: '100%',
-    height: '100%',
+    width: '40%',
     resizeMode: 'contain',
   },
   sview: {
-    marginTop: 10
+    marginTop: 10,
   }
 })
 
@@ -141,23 +135,29 @@ const Home = () => {
     setItems(result);
   }
 
-  useEffect(() => {
-    getData();
-  }, [])
+  const EmptyPrompt = () => (
+    <View style={{ paddingVertical: 12, backgroundColor: 'white', borderRadius: 15, justifyContent: 'center', alignItems: 'center' }}>
+      <Text style={{ fontSize: 22, fontWeight: 'bold' }}>Add your first note?</Text>
+      <Text>It can help you manage</Text>
+      <Text>your routine</Text>
+      <Image
+        source={require('../assets/images/notes-new.png')}
+        style={style.image}
+      />
+      <View style={{ marginVertical: 32 }} />
+      <Button mode="contained" onPress={() => onAddTaskPressed()} style={[style.button]}>
+        Add Task +
+      </Button>
+    </View>
+  )
 
-  return (
-    <View style={style.page}>
-
-      <TaskModal onModalClose={() => hideModal()} {...modalValue} />
-
-      <Text style={style.subTitle}>Hello,</Text>
-      <Text style={style.title}>You Have {items?.length ?? 0} Upcoming Task</Text>
-      {items.length == 0 && <TouchableOpacity style={style.container} onPress={() => onAddTaskPressed()}>
-        <Image
-          source={require('../assets/images/notes.png')}
-          style={style.image}
-        />
-      </TouchableOpacity>}
+  function renderList() {
+    if (items.length === 0) {
+      return (
+        <EmptyPrompt />
+      )
+    }
+    else return (
       <ScrollView style={style.sview}>
         {items?.map((v) => (
           <TaskCard
@@ -168,7 +168,28 @@ const Home = () => {
             onCompletePressed={onCompletePressed}
           />
         ))}
+        <View style={{ marginVertical: 40 }} />
       </ScrollView>
+    )
+  }
+
+  useEffect(() => {
+    getData();
+  }, [])
+
+  return (
+    <View style={style.page}>
+      <TaskModal onModalClose={() => hideModal()} {...modalValue} />
+
+      <Text style={style.subTitle}>Hello,</Text>
+      <Text style={style.title}>You Have {items?.length ?? 0} Upcoming Task</Text>
+      {/* {items.length == 0 && <TouchableOpacity style={style.container} onPress={() => onAddTaskPressed()}>
+        <Image
+          source={require('../assets/images/notes.png')}
+          style={style.image}
+        />
+      </TouchableOpacity>} */}
+      {renderList()}
       <Button mode="contained" onPress={() => onAddTaskPressed()} style={style.button}>
         Add Task +
       </Button>

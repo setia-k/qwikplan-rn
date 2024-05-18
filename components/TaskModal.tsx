@@ -125,7 +125,7 @@ export const TaskModal = (props: {
         $id: update.id,
       })
       console.log(`RESULT ${result.changes}`)
-      if (result.changes){
+      if (result.changes) {
         rescheduleNotification(update)
       }
     } catch (error) {
@@ -182,10 +182,10 @@ export const TaskModal = (props: {
     >
       <View style={style.drape}>
         <View style={style.modal}>
-        <Ionicons style={style.closeIcon} name='close' onPress={onModalClose} />
+          <Ionicons style={style.closeIcon} name='close' onPress={onModalClose} />
           <View style={{ flexDirection: 'row' }}>
             <Text>{isEdit ? 'Edit' : 'Add'} Task</Text>
-            
+
           </View>
 
           <View style={{ flexDirection: 'row' }}>
@@ -207,11 +207,10 @@ export const TaskModal = (props: {
             />
           </View>
 
+          <Text style={{ marginVertical: 4, marginHorizontal: 4, }}>
+            Date
+          </Text>
           <View style={{ flexDirection: 'row' }}>
-            <Text style={{marginVertical: 4,
-              marginHorizontal: 4,}}>
-              Date
-            </Text>
             <DatePicker
               date={pickerDate}
               onDateChange={setPickerDate}
