@@ -4,12 +4,51 @@ import { TaskType } from "@/interfaces/task";
 import { deleteNotifications } from "@/service/notification";
 import { useSQLiteContext } from "expo-sqlite";
 import { useEffect, useState } from "react";
-import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Alert, Pressable, ScrollView, StyleSheet, Text, View, TouchableOpacity , Image} from "react-native";
+import { Button, List } from 'react-native-paper';
 
 const style = StyleSheet.create({
   page: {
     paddingHorizontal: 16,
-    paddingTop: 8
+    paddingTop: 8,
+    flex:1,
+  },
+  buttonAddTask: {
+    flex: 1, 
+    justifyContent: 'space-between', // Ensures button stays at bottom
+  },
+  button: {
+    margin: 4,
+    position: 'absolute', // Position the button absolutely
+    bottom: 20, // Position it 20 pixels from the bottom
+    left: 20, // Position it 20 pixels from the left (adjust as needed)
+    right: 20, // Position it 20 pixels from the right (adjust as needed)
+    alignSelf: 'flex-end',
+    width: '90%', // Make it 90% of the screen width
+  },
+  subTitle:{
+    fontSize: 18,
+    color: '#6253A2',
+    margin:5
+  },
+  title:{
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#6253A2',
+    margin: 4
+  },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  image: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'contain',
+  },
+  sview: {
+    marginTop: 10
   }
 })
 
@@ -111,16 +150,15 @@ const Home = () => {
 
       <TaskModal onModalClose={() => hideModal()} {...modalValue} />
 
-      <Text>Hello,</Text>
-      <Text>You Have {items?.length ?? 0} Upcoming Task</Text>
-
-      <Pressable onPress={() => onAddTaskPressed()}>
-        <Text>
-          Add Task +
-        </Text>
-      </Pressable>
-
-      <ScrollView>
+      <Text style={style.subTitle}>Hello,</Text>
+      <Text style={style.title}>You Have {items?.length ?? 0} Upcoming Task</Text>
+      {items.length == 0 && <TouchableOpacity style={style.container} onPress={() => onAddTaskPressed()}>
+        <Image
+          source={require('../assets/images/notes.png')}
+          style={style.image}
+        />
+      </TouchableOpacity>}
+      <ScrollView style={style.sview}>
         {items?.map((v) => (
           <TaskCard
             key={v.id}
@@ -131,7 +169,9 @@ const Home = () => {
           />
         ))}
       </ScrollView>
-
+      <Button mode="contained" onPress={() => onAddTaskPressed()} style={style.button}>
+        Add Task +
+      </Button>
     </View>
   );
 }

@@ -1,5 +1,5 @@
 {
-  "name": "qwikplan",
+  "name": "remember_me",
   "main": "expo-router/entry",
   "version": "1.0.0",
   "scripts": {
@@ -19,8 +19,11 @@
     "@react-navigation/native": "^6.0.2",
     "expo": "~51.0.7",
     "expo-constants": "~16.0.1",
+    "expo-dev-client": "~4.0.14",
+    "expo-device": "~6.0.2",
     "expo-font": "~12.0.5",
     "expo-linking": "~6.3.1",
+    "expo-notifications": "~0.28.3",
     "expo-router": "~3.5.14",
     "expo-splash-screen": "~0.27.4",
     "expo-sqlite": "~14.0.3",
@@ -33,13 +36,12 @@
     "react-native-date-picker": "^5.0.2",
     "react-native-gesture-handler": "~2.16.1",
     "react-native-get-random-values": "^1.11.0",
+    "react-native-paper": "^5.12.3",
     "react-native-reanimated": "~3.10.1",
     "react-native-safe-area-context": "4.10.1",
     "react-native-screens": "3.31.1",
     "react-native-web": "~0.19.10",
-    "uuid": "^9.0.1",
-    "expo-notifications": "~0.28.3",
-    "expo-device": "~6.0.2"
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
