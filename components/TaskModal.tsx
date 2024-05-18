@@ -125,7 +125,7 @@ export const TaskModal = (props: {
         $id: update.id,
       })
       console.log(`RESULT ${result.changes}`)
-      if (result.changes){
+      if (result.changes) {
         rescheduleNotification(update)
       }
     } catch (error) {
@@ -155,6 +155,12 @@ export const TaskModal = (props: {
       paddingVertical: 4,
       paddingHorizontal: 8,
     },
+    closeIcon: {
+      position: 'absolute',
+      top: 3,
+      right: 8,
+      fontSize: 18
+    }
   })
 
   useEffect(() => {
@@ -176,9 +182,10 @@ export const TaskModal = (props: {
     >
       <View style={style.drape}>
         <View style={style.modal}>
+          <Ionicons style={style.closeIcon} name='close' onPress={onModalClose} />
           <View style={{ flexDirection: 'row' }}>
             <Text>{isEdit ? 'Edit' : 'Add'} Task</Text>
-            <Ionicons name='close' onPress={onModalClose} />
+
           </View>
 
           <View style={{ flexDirection: 'row' }}>
@@ -200,6 +207,9 @@ export const TaskModal = (props: {
             />
           </View>
 
+          <Text style={{ marginVertical: 4, marginHorizontal: 4, }}>
+            Date
+          </Text>
           <View style={{ flexDirection: 'row' }}>
             <DatePicker
               date={pickerDate}

@@ -13,6 +13,7 @@ import { DBCreateTable, DBDebugInit } from '@/service/db';
 
 import * as Notifications from 'expo-notifications';
 import { checkNotificationAllowed } from '@/service/notification';
+import { PaperProvider } from 'react-native-paper';
 SplashScreen.preventAutoHideAsync();
 
 Notifications.setNotificationHandler({
@@ -61,13 +62,16 @@ export default function RootLayout() {
     <SafeAreaView style={{ flex: 1 }}>
       <Suspense fallback={<Fallback />}>
         <SQLiteProvider databaseName='qwikplan.db' useSuspense>
-          {/* <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}> */}
-          <ThemeProvider value={DefaultTheme}>
-            <Stack>
-              <Stack.Screen name="index" options={{ headerShown: false }} />
-            </Stack>
-          </ThemeProvider>
+          <PaperProvider>  
+            {/* <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}> */}
+            <ThemeProvider value={DefaultTheme}>
+              <Stack>
+                <Stack.Screen name="index" options={{ headerShown: false }} />
+              </Stack>
+            </ThemeProvider>
+          </PaperProvider>
         </SQLiteProvider>
+
       </Suspense>
     </SafeAreaView>
   );
