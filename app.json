@@ -14,14 +14,14 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.dss.qwikplan"
+      "bundleIdentifier": "com.dss.rememberme"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.dss.qwikplan",
+      "package": "com.dss.rememberme",
       "permissions": [
         "android.permission.POST_NOTIFICATIONS"
       ]
