@@ -62,14 +62,24 @@ const Home = () => {
   }
   const [items, setItems] = useState<TaskType[]>([])
 
+  function getDateString(date: Date) {
+    const day = date.toLocaleDateString('en-US', { weekday: 'long' })
+    const num = date.getDate().toString().padStart(2, '0')
+    const month = date.toLocaleDateString('en-US', { month: 'long' })
+    return `${day}, ${num} ${month} ${date.getFullYear()} ${date.getHours() + ':' + date.getMinutes()}`
+  }
+
   function onAddTaskPressed() {
     setModalValue({
       visible: true,
       data: null,
       isEdit: false,
-      onFinishCallback: () => {
+      onFinishCallback: (data: TaskType) => {
         hideModal();
         getData();
+        Alert.alert('Task Created',
+          `Notifications will appear around ${getDateString(new Date(data.datetime))}`
+        )
       },
     })
   }
@@ -90,6 +100,7 @@ const Home = () => {
       console.error(error);
     } finally {
       getData();
+      Alert.alert('Task Deleted')
     }
   }
 
@@ -101,6 +112,7 @@ const Home = () => {
       onFinishCallback: () => {
         hideModal();
         getData();
+        Alert.alert('Task Rescheduled', `Notification will appear around ${getDateString(new Date(data.datetime))}`)
       },
     })
   }
@@ -122,6 +134,7 @@ const Home = () => {
       console.error(error);
     } finally {
       getData();
+      Alert.alert('Task Completed')
     }
   }
 

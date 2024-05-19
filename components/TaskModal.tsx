@@ -15,7 +15,7 @@ import { rescheduleNotification, scheduleNotifications } from "@/service/notific
 export const TaskModal = (props: {
   visible: boolean,
   onModalClose: () => void,
-  onFinishCallback: () => void,
+  onFinishCallback: (data: TaskType) => void,
   data?: TaskType,
   isEdit?: boolean,
 }) => {
@@ -50,6 +50,11 @@ export const TaskModal = (props: {
     const title = titleRef?.current?.getFieldValue() || '';
     const event = eventRef?.current?.getFieldValue() || '';
     const details = detailRef?.current?.getFieldValue() || '';
+
+    if (!title.length) {
+      Alert.alert('Title required!')
+      return;
+    }
 
     if (isEdit && data) {
       let update: TaskType = {
@@ -100,7 +105,7 @@ export const TaskModal = (props: {
       Alert.alert('Unable to add new task');
     } finally {
       await query.finalizeAsync();
-      props?.onFinishCallback()
+      props?.onFinishCallback(data)
       resetForm();
     }
   }
@@ -133,7 +138,7 @@ export const TaskModal = (props: {
       Alert.alert('Unable to update task');
     } finally {
       query.finalizeAsync();
-      props?.onFinishCallback()
+      props?.onFinishCallback(update)
       resetForm();
     }
   }
@@ -217,6 +222,7 @@ export const TaskModal = (props: {
               is24hourSource="locale"
               locale="id"
               minimumDate={getDateTimeLimit()}
+              theme="light"
             />
           </View>
 
