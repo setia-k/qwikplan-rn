@@ -42,7 +42,7 @@ export async function scheduleNotifications(task: TaskType) {
     const nowIdentifier = await Notifications.scheduleNotificationAsync({
       content: {
         title: task.title,
-        body: task.details ?? "You got a reminder from Remember Me :)",
+        body: task.details || "You got a reminder from Remember Me :)",
         interruptionLevel: 'timeSensitive',
         priority: 'max',
       },
@@ -57,11 +57,12 @@ export async function scheduleNotifications(task: TaskType) {
     const closeIdenfitier = await Notifications.scheduleNotificationAsync({
       content: {
         title: task.title,
-        body: task.details ?? "You got a reminder from Remember Me :)",
+        body: task.details || "You got a reminder from Remember Me :)",
         interruptionLevel: 'timeSensitive',
         priority: 'max',
       },
       trigger: { seconds: seconds },
+      identifier: task.id,
     })
     console.log(`ClOSE IDENTIFIER: ${closeIdenfitier}`)
     return { success: true }
@@ -72,7 +73,7 @@ export async function scheduleNotifications(task: TaskType) {
     const identifier = await Notifications.scheduleNotificationAsync({
       content: {
         title: task.title,
-        body: task.details ?? "You got a reminder from Remember Me :)",
+        body: task.details || "You got a reminder from Remember Me :)",
         interruptionLevel: 'timeSensitive',
         priority: 'max',
       },
