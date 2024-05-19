@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { Alert, Modal, Pressable, StyleSheet, Text, View } from "react-native";
 import DatePicker from "react-native-date-picker";
 import { FieldInput, FieldInputRefType } from "./FieldInput";
-
+import { Button, List } from 'react-native-paper';
 // DO NOT CHANGE THE ORDER =======================
 import 'react-native-get-random-values';
 import { v4 as uuidv4 } from 'uuid';
@@ -220,11 +220,11 @@ export const TaskModal = (props: {
             />
           </View>
 
-          <Pressable
+          <Button mode="contained"
             style={{ paddingVertical: 4, paddingHorizontal: 8, borderWidth: 1, margin: 12 }}
             onPress={() => submit()}>
-            <Text>Save</Text>
-          </Pressable>
+            Save
+          </Button>
 
         </View>
       </View>

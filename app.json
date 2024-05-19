@@ -1,8 +1,8 @@
 {
   "expo": {
     "name": "Remember Me",
-    "slug": "remember_me",
-    "version": "1.0.0",
+    "slug": "rememberme",
+    "version": "1.1.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
@@ -37,7 +37,7 @@
         "origin": false
       },
       "eas": {
-        "projectId": "3c88686f-757b-46d0-87f5-bb4b079fcde9"
+        "projectId": "3fdd6d3e-cda0-463d-8837-1c631c01b379"
       }
     }
   }

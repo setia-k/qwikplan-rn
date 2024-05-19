@@ -19,7 +19,7 @@ const style = StyleSheet.create({
     bottom: 20, // Position it 20 pixels from the bottom
     left: 20, // Position it 20 pixels from the left (adjust as needed)
     right: 20, // Position it 20 pixels from the right (adjust as needed)
-    alignSelf: 'flex-end',
+    // alignSelf: 'flex-end',
     width: '90%', // Make it 90% of the screen width
   },
   subTitle: {
@@ -146,7 +146,7 @@ const Home = () => {
       />
       <View style={{ marginVertical: 32 }} />
       <Button mode="contained" onPress={() => onAddTaskPressed()} style={[style.button]}>
-        Add Task +
+        Make a Note
       </Button>
     </View>
   )

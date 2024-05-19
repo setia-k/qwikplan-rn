@@ -135,7 +135,7 @@ export const TaskCard = (props: {
 
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8 }}>
         <Text style={{ color: 'white' }}>
-          {data?.details};
+          {data?.details}
         </Text>
       </View>
 
@@ -156,7 +156,7 @@ export const TaskCard = (props: {
         </Menu>
         <Button style={{ backgroundColor: '#6750a4', paddingHorizontal: 16 }}>
           <Text style={{ color: 'white' }}>
-            Upcoming
+            {new Date() > dateText ? 'Completed' : 'Upcoming'}
           </Text>
         </Button>
       </View>
